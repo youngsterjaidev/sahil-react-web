@@ -19,23 +19,15 @@ const tMapStyle = {
     height: "100vh",
 };
 
-let map;
-let geolocate;
-let locationMarker;
-
-let marker1 = new mapboxgl.Marker();
-let marker2 = new mapboxgl.Marker();
-
 const App = () => {
     const mapContainer = useRef();
     const [lng, setLng] = useState(0);
     const [lat, setLat] = useState(0);
-    const [zoom, setZoom] = useState(2);
+    const [zoom, setZoom] = useState(9);
     const [presentLocation, setPresentLocation] = useState({
         longitude: 0,
         latitude: 0,
     });
-    const [markers, setMarkers] = useState([]);
 
     // send location to the server
     const sendUserLocation = () => {
@@ -273,77 +265,9 @@ const App = () => {
     };
 
     useEffect(() => {
-        console.log("Effect start");
-
-        map = new mapboxgl.Map({
-            container: mapContainer.current, // reference where the map will be shows
-            style: "mapbox://styles/mapbox/streets-v11",
-            center: [lng, lat],
-            zoom: zoom,
-        });
-
-        geolocate = new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true,
-            },
-            trackingUserLocation: true,
-            trackUserLocation: true,
-            showAccuracyCircle: false,
-            showUserLocation: true,
-        });
-
-        console.log("Effect End");
-
-        return () => map.remove();
+        //sendUserLocation();
+        initialzeMap();
     }, []);
-
-    useEffect(() => {
-        console.log("Effect two");
-
-        locationMarker = new mapboxgl.Marker({
-            color: "red",
-        });
-
-        navigator.geolocation.getCurrentPosition((e) => {
-            setPresentLocation({
-                latitude: e.coords.latitude,
-                longitude: e.coords.longitude,
-            });
-        });
-
-        firebase
-            .database()
-            .ref("location")
-            .on("value", async (snapshot) => {
-                if (snapshot.val() !== null) {
-                    const result = await Object.keys(snapshot.val()).map(
-                        (key) => snapshot.val()[key]
-                    );
-
-                    setMarkers(result);
-
-                    marker1.setLngLat([
-                        result[0].currentLocation.longitude,
-                        result[0].currentLocation.latitude
-                    ]).addTo(map)
-
-                    marker2.setLngLat([
-                        result[1].currentLocation.longitude,
-                        result[1].currentLocation.latitude
-                    ]).addTo(map)
-                } else {
-                    console.log("The Snapshot is null");
-                }
-            });
-
-    }, []);
-
-    useEffect(() => {
-        console.log("Effect Three");
-        locationMarker
-            .setLngLat([presentLocation.longitude, presentLocation.latitude])
-            .addTo(map);
-    }, [presentLocation]);
 
     return (
         <div>
