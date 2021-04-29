@@ -3,7 +3,10 @@ import ReactDOM from "react-dom";
 import firebase from "firebase/app";
 import "firebase/database";
 
-import App from "./components/App.js";
+//import App from "./components/App.js";
+import ReactMap from "./components/ReactMap.js";
+
+
 let firebaseConfig = {
     apiKey: "AIzaSyBa03yaOEGCwaL-G6v95ppgGS6lyvoFSVk",
     authDomain: "react-native-chikchak-firebase.firebaseapp.com",
@@ -18,4 +21,4 @@ let firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(<ReactMap />, document.querySelector("#root"));
