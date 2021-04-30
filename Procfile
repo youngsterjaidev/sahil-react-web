@@ -1,1 +1,1 @@
-web: bin/root
+web: yarn start
